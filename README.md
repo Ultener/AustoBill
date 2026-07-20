@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Ultener/AustoBill/main/icon/logo.png" alt="AustoBill Logo" width="120"/>
+  <img src="https://raw.githubusercontent.com/Ultener/AustoBill/refs/heads/main/main/icon/logo.png" alt="AustoBill Logo" width="120"/>
   <h1>AustoBill</h1>
   <p><strong>Open Source billing panel for Pterodactyl</strong></p>
   <p>
