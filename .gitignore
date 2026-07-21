@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+*.db
+*.db-shm
+*.db-wal
+error.log
+access.log
+uploads/
+index.html
+public/
