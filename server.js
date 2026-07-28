@@ -4460,10 +4460,11 @@ app.use(express.static(distDir));
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) return next();
   if (req.path.includes('.')) return next();
-  if (!existsSync(indexFile)) {
-    return res.status(200).type('html').send(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${APP_NAME}</title></head><body style="display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif"><h1>${APP_NAME}</h1><p style="color:#666">Frontend is building...</p></body></html>`);
+  try {
+    res.type('html').send(fs.readFileSync(indexFile, 'utf-8'));
+  } catch {
+    res.type('html').send(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${APP_NAME}</title></head><body style="display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif"><h1>${APP_NAME}</h1><p style="color:#666">Frontend is building...</p></body></html>`);
   }
-  res.sendFile(indexFile, err => { if (err) res.status(200).type('html').send(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${APP_NAME}</title></head><body style="display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif"><h1>${APP_NAME}</h1><p style="color:#666">Loading...</p></body></html>`); });
 });
 
 const PORT = process.env.PORT || 3000;
