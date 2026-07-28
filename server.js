@@ -4439,6 +4439,10 @@ app.get('/api/stats', (req, res) => {
 const distDir = path.resolve(__dirname, 'dist');
 const indexFile = path.resolve(distDir, 'index.html');
 
+console.log('[STATIC] distDir:', distDir);
+console.log('[STATIC] indexFile:', indexFile);
+console.log('[STATIC] exists:', existsSync(indexFile));
+
 const publicDir = path.join(__dirname, 'public');
 if (existsSync(publicDir)) {
   app.use(express.static(publicDir));
@@ -4451,9 +4455,16 @@ if (existsSync(uploadsDir)) {
   console.log('[STATIC] Serving uploads:', uploadsDir);
 }
 
-if (!existsSync(indexFile)) {
-  console.warn(`[WARN] ${indexFile} not found! Run "npm run build" first.`);
-}
+app.get('/', (req, res) => {
+  try {
+    const html = fs.readFileSync(indexFile, 'utf-8');
+    console.log('[STATIC] Serving index.html, size:', html.length);
+    res.type('html').send(html);
+  } catch (e) {
+    console.error('[STATIC] Failed to read index.html:', e.message);
+    res.type('html').send(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${APP_NAME}</title></head><body style="display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif"><h1>${APP_NAME}</h1><p style="color:#666">Frontend not built yet</p></body></html>`);
+  }
+});
 
 app.use(express.static(distDir));
 
@@ -4463,7 +4474,7 @@ app.use((req, res, next) => {
   try {
     res.type('html').send(fs.readFileSync(indexFile, 'utf-8'));
   } catch {
-    res.type('html').send(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${APP_NAME}</title></head><body style="display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif"><h1>${APP_NAME}</h1><p style="color:#666">Frontend is building...</p></body></html>`);
+    res.type('html').send(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${APP_NAME}</title></head><body style="display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif"><h1>${APP_NAME}</h1><p style="color:#666">Frontend not built yet</p></body></html>`);
   }
 });
 
