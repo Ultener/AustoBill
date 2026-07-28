@@ -4465,7 +4465,11 @@ if (frontendHtml) {
 
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) return next();
-  if (frontendHtml) return res.status(200).type('html').send(frontendHtml);
+  if (frontendHtml) {
+    console.log('[SPA] Sending frontend for', req.method, req.path);
+    return res.status(200).type('html').send(frontendHtml);
+  }
+  console.log('[SPA] No frontend, calling next for', req.method, req.path);
   return next();
 });
 
