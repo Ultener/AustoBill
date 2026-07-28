@@ -388,17 +388,17 @@ prompt() {
 
   if [[ -z "$default" ]]; then
     if [[ "$is_secret" == "true" ]]; then
-      read -s -p "  ${prompt_text}: " "$var_name"
+      read -s -p "  ${prompt_text}: " "$var_name" </dev/tty
       echo ""
     else
-      read -p "  ${prompt_text}: " "$var_name"
+      read -p "  ${prompt_text}: " "$var_name" </dev/tty
     fi
   else
     if [[ "$is_secret" == "true" ]]; then
-      read -s -p "  ${prompt_text} [${default}]: " "$var_name"
+      read -s -p "  ${prompt_text} [${default}]: " "$var_name" </dev/tty
       echo ""
     else
-      read -p "  ${prompt_text} [${default}]: " "$var_name"
+      read -p "  ${prompt_text} [${default}]: " "$var_name" </dev/tty
     fi
     [[ -z "${!var_name}" ]] && eval "$var_name=\"$default\""
   fi
@@ -407,12 +407,12 @@ prompt() {
 confirm() {
   local msg="${1:-$(T proceed)}"
   local yn
-  read -p "  ${msg} (y/N): " yn
+  read -p "  ${msg} (y/N): " yn </dev/tty
   [[ "$yn" =~ ^[Yy$(T yes)]$ ]]
 }
 
 pause() {
-  read -p "  $(T enter)..."
+  read -p "  $(T enter)..." </dev/tty
 }
 
 wait_spinner() {
@@ -521,7 +521,7 @@ select_language() {
   echo -e "    ${C}1)${N} ${W}$(T lang_en)${N}"
   echo -e "    ${C}2)${N} ${W}$(T lang_ru)${N}"
   echo ""
-  read -p "  > " lang_choice
+  read -p "  > " lang_choice </dev/tty
   case "$lang_choice" in
     2|ru|rus|рус) LANG="ru" ;;
     *) LANG="en" ;;
@@ -1202,7 +1202,7 @@ settings_menu() {
     echo -e "  ${C}║${N}  ${C}0.${N}  $(T settings_back)        ${C}║${N}"
     echo -e "  ${C}╚════════════════════════════════════════╝${N}"
     echo ""
-    read -p "  $(T menu_prompt) > " settings_choice
+    read -p "  $(T menu_prompt) > " settings_choice </dev/tty
     case $settings_choice in
       1) cfg_pterodactyl ;;
       2) cfg_discord ;;
@@ -1299,7 +1299,7 @@ main() {
 
   while true; do
     show_menu
-    read -p "  $(T menu_prompt) > " choice
+    read -p "  $(T menu_prompt) > " choice </dev/tty
     case $choice in
       1) install_panel ;;
       2) update_panel ;;
