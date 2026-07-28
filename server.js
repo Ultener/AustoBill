@@ -54,6 +54,22 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(cookieParser());
 
+// ========== EARLY SPA FALLBACK (должен быть до всех app.get роутов!) ==========
+const distDirEarly = path.resolve(__dirname, 'dist');
+const indexFileEarly = path.resolve(distDirEarly, 'index.html');
+const frontendHtmlCached = existsSync(indexFileEarly) ? fs.readFileSync(indexFileEarly, 'utf-8') : null;
+if (frontendHtmlCached) {
+  console.log('[SPA] Cached frontend HTML, size:', frontendHtmlCached.length);
+}
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api')) return next();
+  if (frontendHtmlCached) {
+    console.log('[SPA] Serving frontend for', req.method, req.path);
+    return res.status(200).type('html').send(frontendHtmlCached);
+  }
+  next();
+});
+
 // ========== APP NAME ==========
 const APP_NAME = process.env.APP_NAME;
 
@@ -4454,24 +4470,6 @@ if (existsSync(uploadsDir)) {
   app.use('/uploads', express.static(uploadsDir));
   console.log('[STATIC] Serving uploads:', uploadsDir);
 }
-
-// Serve built frontend for all non-API routes
-const frontendHtml = existsSync(indexFile) ? fs.readFileSync(indexFile, 'utf-8') : null;
-if (frontendHtml) {
-  console.log('[STATIC] Built frontend loaded, size:', frontendHtml.length);
-} else {
-  console.warn('[STATIC] index.html not found at', indexFile);
-}
-
-app.use((req, res, next) => {
-  if (req.path.startsWith('/api')) return next();
-  if (frontendHtml) {
-    console.log('[SPA] Sending frontend for', req.method, req.path);
-    return res.status(200).type('html').send(frontendHtml);
-  }
-  console.log('[SPA] No frontend, calling next for', req.method, req.path);
-  return next();
-});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
