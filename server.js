@@ -54,14 +54,9 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(cookieParser());
 
-// Must be defined before all routes
-const distDir2 = path.resolve(__dirname, 'dist');
-const indexFile2 = path.resolve(distDir2, 'index.html');
-const frontendHtml2 = existsSync(indexFile2) ? fs.readFileSync(indexFile2, 'utf-8') : null;
-
+// Root route — debug
 app.get('/', (req, res) => {
-  if (frontendHtml2) return res.status(200).type('html').send(frontendHtml2);
-  res.status(200).type('html').send(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${APP_NAME}</title></head><body style="display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif"><h1>${APP_NAME}</h1><p style="color:#666">Frontend building...</p></body></html>`);
+  res.status(200).type('html').send('<h1>Hello World</h1>');
 });
 
 // ========== APP NAME ==========
