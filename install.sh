@@ -12,9 +12,9 @@ C='\033[0;36m'; P='\033[0;35m'; W='\033[1;37m'; D='\033[2m'; N='\033[0m'
 BOLD='\033[1m'
 
 # ── Paths ──
-DIR="/opt/austobill"
+DIR="/opt/luminarix"
 ENV_FILE="$DIR/.env"
-SERVICE="austobill"
+SERVICE="luminarix"
 REPO_URL="https://github.com/Ultener/AustoBill.git"
 
 # ── State ──
@@ -768,7 +768,7 @@ install_panel() {
 
   step "7" "$(T install_step7)..."
   export NODE_OPTIONS="--max-old-space-size=2048"
-  npm run build > /dev/null 2>&1 || true
+  npm run build 2>&1 || fail "Build failed — check output above"
   log "$(T done)"
 
   step "8" "$(T install_step8)..."
