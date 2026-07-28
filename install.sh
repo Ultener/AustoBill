@@ -781,8 +781,8 @@ After=network.target
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/opt/austobill
-ExecStart=/usr/bin/node /opt/austobill/server.js
+WorkingDirectory=$DIR
+ExecStart=/usr/bin/node $DIR/server.js
 Restart=always
 RestartSec=5
 Environment=NODE_ENV=production
