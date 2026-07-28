@@ -4488,4 +4488,14 @@ const httpServer = app.listen(PORT, () => {
   console.log(`📝 Логи записываются в access.log`);
   console.log(`═══════════════════════════════════════════\n`);
 });
+
+// Debug: log all requests
+httpServer.on('request', (req, res) => {
+  console.log('[REQ]', req.method, req.url);
+  const origEnd = res.end.bind(res);
+  res.end = function(...args) {
+    console.log('[RES]', req.method, req.url, res.statusCode);
+    return origEnd(...args);
+  };
+});
 setInterval(() => {}, 60000);
