@@ -4463,9 +4463,8 @@ if (frontendHtml) {
   console.warn('[STATIC] index.html not found at', indexFile);
 }
 
-app.use((req, res) => {
+app.get('/:catchAll(.*)?', (req, res) => {
   if (req.path.startsWith('/api')) return res.status(404).json({ error: 'Not found' });
-  if (req.path.includes('.')) return res.status(404).type('text').send('Not found');
   if (frontendHtml) return res.type('html').send(frontendHtml);
   res.status(200).type('html').send(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${APP_NAME}</title></head><body style="display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif"><h1>${APP_NAME}</h1><p style="color:#666">Frontend building...</p></body></html>`);
 });
