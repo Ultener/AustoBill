@@ -54,11 +54,6 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(cookieParser());
 
-// Root route — debug
-app.get('/', (req, res) => {
-  res.status(200).type('html').send('<h1>Hello World</h1>');
-});
-
 // ========== APP NAME ==========
 const APP_NAME = process.env.APP_NAME;
 
@@ -4470,32 +4465,17 @@ if (frontendHtml) {
 
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) return next();
-  if (frontendHtml) {
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end(frontendHtml);
-  } else {
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${APP_NAME}</title></head><body style="display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif"><h1>${APP_NAME}</h1><p style="color:#666">Frontend building...</p></body></html>`);
-  }
+  if (frontendHtml) return res.status(200).type('html').send(frontendHtml);
+  return next();
 });
 
 const PORT = process.env.PORT || 3000;
-const httpServer = app.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`\n═══════════════════════════════════════════`);
   console.log(`🚀 ${APP_NAME} запущен: http://localhost:${PORT}`);
   console.log(`📡 Pterodactyl: ${PTERO_URL}`);
   console.log(`🗄️  SQLite: luminarix.db`);
   console.log(`📝 Логи записываются в access.log`);
   console.log(`═══════════════════════════════════════════\n`);
-});
-
-// Debug: log all requests
-httpServer.on('request', (req, res) => {
-  console.log('[REQ]', req.method, req.url);
-  const origEnd = res.end.bind(res);
-  res.end = function(...args) {
-    console.log('[RES]', req.method, req.url, res.statusCode);
-    return origEnd(...args);
-  };
 });
 setInterval(() => {}, 60000);
