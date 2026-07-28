@@ -973,9 +973,9 @@ update_panel() {
   cd "$DIR"
 
   step "4" "$(T update_step4)..."
-  npm install --silent > /dev/null 2>&1
+  npm install --silent 2>&1
   export NODE_OPTIONS="--max-old-space-size=2048"
-  npm run build > /dev/null 2>&1
+  npm run build 2>&1 || fail "Build failed — check output above"
   log "$(T done)"
 
   step "5" "$(T update_step5)..."
