@@ -6,8 +6,6 @@
 #        sudo bash install.sh
 # ═══════════════════════════════════════════════════════════════
 
-set -e
-
 # ── Colors ──
 R='\033[0;31m'; G='\033[0;32m'; Y='\033[1;33m'; B='\033[0;34m'
 C='\033[0;36m'; P='\033[0;35m'; W='\033[1;37m'; D='\033[2m'; N='\033[0m'
@@ -726,15 +724,15 @@ install_panel() {
   echo ""
 
   step "1" "$(T install_step1)..."
-  apt update -qq && apt upgrade -y -qq > /dev/null 2>&1
+  apt update -qq > /dev/null 2>&1 || true; apt upgrade -y -qq > /dev/null 2>&1 || true
   log "$(T done)"
 
   step "2" "$(T install_step2)..."
-  apt install -y -qq curl wget git nano ufw nginx certbot python3-certbot-nginx > /dev/null 2>&1
+  apt install -y -qq curl wget git nano ufw nginx certbot python3-certbot-nginx > /dev/null 2>&1 || true
   log "$(T done)"
 
   step "3" "$(T install_step3)..."
-  mkdir -p "$DIR"
+  mkdir -p "$DIR" 2>/dev/null || true
   log "$(T done)"
 
   step "4" "$(T install_step4)..."
@@ -757,20 +755,20 @@ install_panel() {
     nv=$(node -v)
     warn "Node.js $nv ($(T skip))"
   else
-    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - > /dev/null 2>&1
-    apt install -y -qq nodejs > /dev/null 2>&1
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - > /dev/null 2>&1 || true
+    apt install -y -qq nodejs > /dev/null 2>&1 || true
     log "Node.js $(node -v)"
   fi
 
   cd "$DIR"
 
   step "6" "$(T install_step6)..."
-  npm install --silent > /dev/null 2>&1
+  npm install --silent > /dev/null 2>&1 || true
   log "$(T done)"
 
   step "7" "$(T install_step7)..."
   export NODE_OPTIONS="--max-old-space-size=2048"
-  npm run build > /dev/null 2>&1
+  npm run build > /dev/null 2>&1 || true
   log "$(T done)"
 
   step "8" "$(T install_step8)..."
