@@ -4464,7 +4464,7 @@ app.use((req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const httpServer = app.listen(PORT, () => {
   console.log(`\n═══════════════════════════════════════════`);
   console.log(`🚀 ${APP_NAME} запущен: http://localhost:${PORT}`);
   console.log(`📡 Pterodactyl: ${PTERO_URL}`);
@@ -4472,3 +4472,4 @@ app.listen(PORT, () => {
   console.log(`📝 Логи записываются в access.log`);
   console.log(`═══════════════════════════════════════════\n`);
 });
+setInterval(() => {}, 60000);
