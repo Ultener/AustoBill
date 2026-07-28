@@ -553,7 +553,7 @@ generate_env() {
 
   # ── Pterodactyl ──
   echo ""
-  echo -e "  ${B}── $(T cfg_ptero_url) ──${N}"
+  echo -e "  ${B}── Pterodactyl ──${N}"
   prompt "ptero_url" "$(T cfg_ptero_url)" "https://panel.${domain:-example.com}" "$(T cfg_ptero_url_help)"
   prompt "ptero_key" "$(T cfg_ptero_key)" "" "$(T cfg_ptero_key_help)" "true"
 
