@@ -4463,7 +4463,7 @@ if (frontendHtml) {
   console.warn('[STATIC] index.html not found at', indexFile);
 }
 
-app.get('*', (req, res) => {
+app.use((req, res) => {
   if (req.path.startsWith('/api')) return res.status(404).json({ error: 'Not found' });
   if (req.path.includes('.')) return res.status(404).type('text').send('Not found');
   if (frontendHtml) return res.type('html').send(frontendHtml);
