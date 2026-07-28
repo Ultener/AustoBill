@@ -772,7 +772,7 @@ install_panel() {
   log "$(T done)"
 
   step "8" "$(T install_step8)..."
-  cat > /etc/systemd/system/$SERVICE.service << 'SEOF'
+  cat > /etc/systemd/system/$SERVICE.service << EOF
 [Unit]
 Description=AustoBill Billing Service
 Documentation=https://github.com/austobill
@@ -793,7 +793,7 @@ SyslogIdentifier=austobill
 
 [Install]
 WantedBy=multi-user.target
-SEOF
+EOF
   systemctl daemon-reload
   systemctl enable $SERVICE > /dev/null 2>&1
   systemctl start $SERVICE
