@@ -4455,26 +4455,21 @@ if (existsSync(uploadsDir)) {
   console.log('[STATIC] Serving uploads:', uploadsDir);
 }
 
-app.get('/', (req, res) => {
-  try {
-    const html = fs.readFileSync(indexFile, 'utf-8');
-    console.log('[STATIC] Serving index.html, size:', html.length);
-    res.type('html').send(html);
-  } catch (e) {
-    console.error('[STATIC] Failed to read index.html:', e.message);
-    res.type('html').send(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${APP_NAME}</title></head><body style="display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif"><h1>${APP_NAME}</h1><p style="color:#666">Frontend not built yet</p></body></html>`);
-  }
-});
-
-app.use(express.static(distDir));
+// Serve built frontend for all non-API routes
+const frontendHtml = existsSync(indexFile) ? fs.readFileSync(indexFile, 'utf-8') : null;
+if (frontendHtml) {
+  console.log('[STATIC] Built frontend loaded, size:', frontendHtml.length);
+} else {
+  console.warn('[STATIC] index.html not found at', indexFile);
+}
 
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) return next();
   if (req.path.includes('.')) return next();
-  try {
-    res.type('html').send(fs.readFileSync(indexFile, 'utf-8'));
-  } catch {
-    res.type('html').send(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${APP_NAME}</title></head><body style="display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif"><h1>${APP_NAME}</h1><p style="color:#666">Frontend not built yet</p></body></html>`);
+  if (frontendHtml) {
+    res.type('html').send(frontendHtml);
+  } else {
+    next();
   }
 });
 
